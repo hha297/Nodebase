@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Space_Grotesk, Space_Mono } from 'next/font/google';
 import './globals.css';
+import { TRPCReactProvider } from '@/trpc/client';
 
 const primaryFont = Space_Grotesk({
         variable: '--font-primary',
@@ -26,7 +27,7 @@ export default function RootLayout({
         return (
                 <html lang="en">
                         <body className={`${primaryFont.variable} ${secondaryFont.variable} antialiased`}>
-                                {children}
+                                <TRPCReactProvider>{children}</TRPCReactProvider>
                         </body>
                 </html>
         );

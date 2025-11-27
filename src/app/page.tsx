@@ -1,11 +1,12 @@
-import { Button } from '@/components/ui/button';
+'use client';
 
-export default function Home() {
-        return (
-                <div>
-                        Home
-                        <h1>Hello World</h1>
-                        <Button>Click me</Button>
-                </div>
-        );
-}
+import { useTRPC } from '@/trpc/client';
+import { useQuery } from '@tanstack/react-query';
+
+const Home = () => {
+        const trpc = useTRPC();
+        const { data: users } = useQuery(trpc.getUsers.queryOptions());
+        return <div>{JSON.stringify(users)}</div>;
+};
+
+export default Home;
