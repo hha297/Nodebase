@@ -1,0 +1,154 @@
+'use client';
+
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { authClient } from '@/lib/auth/auth-client';
+import { cn } from '@/lib/utils';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { GithubIcon, Loader2 } from 'lucide-react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import { z } from 'zod';
+
+const signInSchema = z.object({
+        email: z.email('Invalid email address'),
+        password: z.string().min(1, 'Password is required'),
+});
+
+type SignInFormValues = z.infer<typeof signInSchema>;
+
+export const SignInForm = () => {
+        const router = useRouter();
+        const form = useForm<SignInFormValues>({
+                resolver: zodResolver(signInSchema),
+                defaultValues: {
+                        email: '',
+                        password: '',
+                },
+        });
+        const onSubmit = async (values: SignInFormValues) => {
+                await authClient.signIn.email(
+                        {
+                                email: values.email,
+                                password: values.password,
+                                callbackURL: '/',
+                        },
+                        {
+                                onSuccess: () => {
+                                        toast.success('Signed in successfully');
+                                        router.push('/');
+                                },
+                                onError: (ctx) => {
+                                        toast.error(ctx.error.message);
+                                        console.error(ctx.error);
+                                },
+                        },
+                );
+        };
+
+        const isPending = form.formState.isSubmitting;
+
+        return (
+                <div className="flex flex-col gap-6">
+                        <Card>
+                                <CardHeader className="text-center">
+                                        <CardTitle>Welcome back</CardTitle>
+                                        <CardDescription>Sign in to your account to continue.</CardDescription>
+                                </CardHeader>
+                                <CardContent>
+                                        <Form {...form}>
+                                                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                                                        <div className="grid gap-6">
+                                                                <div className="flex flex-col gap-4">
+                                                                        <Button
+                                                                                variant="outline"
+                                                                                className="w-full"
+                                                                                type="button"
+                                                                                disabled={isPending}
+                                                                        >
+                                                                                Continue with Github
+                                                                        </Button>
+                                                                        <Button
+                                                                                variant="outline"
+                                                                                className="w-full"
+                                                                                type="button"
+                                                                                disabled={isPending}
+                                                                        >
+                                                                                Continue with Google
+                                                                        </Button>
+                                                                </div>
+                                                                <div className="grid gap-6">
+                                                                        <FormField
+                                                                                control={form.control}
+                                                                                name="email"
+                                                                                render={({ field }) => (
+                                                                                        <FormItem>
+                                                                                                <FormLabel>
+                                                                                                        Email
+                                                                                                </FormLabel>
+                                                                                                <FormControl>
+                                                                                                        <Input
+                                                                                                                placeholder="email@example.com"
+                                                                                                                type="email"
+                                                                                                                {...field}
+                                                                                                        />
+                                                                                                </FormControl>
+                                                                                                <FormMessage />
+                                                                                        </FormItem>
+                                                                                )}
+                                                                        />
+                                                                        <FormField
+                                                                                control={form.control}
+                                                                                name="password"
+                                                                                render={({ field }) => (
+                                                                                        <FormItem>
+                                                                                                <FormLabel>
+                                                                                                        Password
+                                                                                                </FormLabel>
+                                                                                                <FormControl>
+                                                                                                        <Input
+                                                                                                                placeholder="********"
+                                                                                                                type="password"
+                                                                                                                {...field}
+                                                                                                        />
+                                                                                                </FormControl>
+                                                                                                <FormMessage />
+                                                                                        </FormItem>
+                                                                                )}
+                                                                        />
+                                                                        <Button
+                                                                                type="submit"
+                                                                                className="w-full"
+                                                                                disabled={isPending}
+                                                                        >
+                                                                                {isPending ? (
+                                                                                        <Loader2 className="size-4 animate-spin" />
+                                                                                ) : (
+                                                                                        'Sign In'
+                                                                                )}
+                                                                        </Button>
+                                                                </div>
+                                                                <div className="flex items-center justify-center">
+                                                                        <p className="text-sm">
+                                                                                Don't have an account?{' '}
+                                                                                <Link
+                                                                                        href="/sign-up"
+                                                                                        className="text-primary underline underline-offset-4"
+                                                                                >
+                                                                                        Sign up
+                                                                                </Link>
+                                                                        </p>
+                                                                </div>
+                                                        </div>
+                                                </form>
+                                        </Form>
+                                </CardContent>
+                        </Card>
+                </div>
+        );
+};
