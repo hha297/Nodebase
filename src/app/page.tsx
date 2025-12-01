@@ -1,12 +1,8 @@
-'use client';
+import { requireAuth } from '@/lib/auth/auth-utils';
 
-import { useTRPC } from '@/trpc/client';
-import { useQuery } from '@tanstack/react-query';
-
-const Home = () => {
-        const trpc = useTRPC();
-        const { data: users } = useQuery(trpc.getUsers.queryOptions());
-        return <div>{JSON.stringify(users)}</div>;
+const Home = async () => {
+        await requireAuth();
+        return <div>Protected Page</div>;
 };
 
 export default Home;
