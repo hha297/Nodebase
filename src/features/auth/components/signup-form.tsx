@@ -9,6 +9,7 @@ import { authClient } from '@/lib/auth/auth-client';
 import { cn } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { GithubIcon, Loader2 } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
@@ -79,6 +80,12 @@ export const SignUpForm = () => {
                                                                                 type="button"
                                                                                 disabled={isPending}
                                                                         >
+                                                                                <Image
+                                                                                        src="/images/github.svg"
+                                                                                        alt="Github"
+                                                                                        width={20}
+                                                                                        height={20}
+                                                                                />
                                                                                 Continue with Github
                                                                         </Button>
                                                                         <Button
@@ -87,6 +94,12 @@ export const SignUpForm = () => {
                                                                                 type="button"
                                                                                 disabled={isPending}
                                                                         >
+                                                                                <Image
+                                                                                        src="/images/google.svg"
+                                                                                        alt="Google"
+                                                                                        width={20}
+                                                                                        height={20}
+                                                                                />
                                                                                 Continue with Google
                                                                         </Button>
                                                                 </div>
