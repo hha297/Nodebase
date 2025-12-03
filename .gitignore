@@ -40,4 +40,11 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# Prisma generated files
 /src/generated/prisma
+
+# mprocs logs
+mprocs.log
+
+# Sentry Config File
+.env.sentry-build-plugin
