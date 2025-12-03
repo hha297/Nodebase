@@ -21,12 +21,26 @@ const Home = () => {
                         },
                 }),
         );
+        const testAI = useMutation(
+                trpc.testAI.mutationOptions({
+                        onSuccess: (data) => {
+                                toast.success('AI test successful');
+                        },
+                        onError: (error) => {
+                                toast.error(error.message);
+                        },
+                }),
+        );
         return (
                 <div className="min-h-screen min-w-screen flex items-center justify-center flex-col gap-y-6">
                         {JSON.stringify(data)}
                         <Button disabled={createWorkflow.isPending} onClick={() => createWorkflow.mutate()}>
                                 Create Workflow
                         </Button>
+                        <Button disabled={testAI.isPending} onClick={() => testAI.mutate()}>
+                                Test AI
+                        </Button>
+                        {testAI.data && <div className="text-sm text-gray-500">{testAI.data.message}</div>}
                 </div>
         );
 };
