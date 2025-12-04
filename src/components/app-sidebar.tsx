@@ -21,6 +21,7 @@ import Image from 'next/image';
 import Logo from './logo';
 import { usePathname, useRouter } from 'next/navigation';
 import { authClient } from '@/lib/auth/auth-client';
+import { useHasActiveSubscription } from '@/features/subscriptions/hooks/use-subscription';
 
 const menuItems = [
         {
@@ -48,7 +49,7 @@ const menuItems = [
 export const AppSidebar = () => {
         const pathname = usePathname();
         const route = useRouter();
-
+        const { hasActiveSubscription, isLoading } = useHasActiveSubscription();
         return (
                 <Sidebar collapsible="icon">
                         <SidebarHeader>
@@ -94,16 +95,20 @@ export const AppSidebar = () => {
                         </SidebarContent>
                         <SidebarFooter>
                                 <SidebarMenu>
-                                        <SidebarMenuItem>
-                                                <SidebarMenuButton
-                                                        tooltip="Upgrade to Pro"
-                                                        onClick={() => {}}
-                                                        className="gap-x-4 h-10"
-                                                >
-                                                        <StarIcon className="size-4" />
-                                                        <span>Upgrade to Pro</span>
-                                                </SidebarMenuButton>
-                                        </SidebarMenuItem>
+                                        {!hasActiveSubscription && !isLoading && (
+                                                <SidebarMenuItem>
+                                                        <SidebarMenuButton
+                                                                tooltip="Upgrade to Pro"
+                                                                onClick={() =>
+                                                                        authClient.checkout({ slug: 'nodebase-pro' })
+                                                                }
+                                                                className="gap-x-4 h-10"
+                                                        >
+                                                                <StarIcon className="size-4" />
+                                                                <span>Upgrade to Pro</span>
+                                                        </SidebarMenuButton>
+                                                </SidebarMenuItem>
+                                        )}
                                         <SidebarMenuItem>
                                                 <SidebarMenuButton
                                                         tooltip="Billing"
