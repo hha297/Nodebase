@@ -3,7 +3,7 @@ import { Space_Grotesk, Space_Mono } from 'next/font/google';
 import './globals.css';
 import { TRPCReactProvider } from '@/trpc/client';
 import { Toaster } from '@/components/ui/sonner';
-
+import { NuqsAdapter } from 'nuqs/adapters/next/app';
 const primaryFont = Space_Grotesk({
         variable: '--font-primary',
         subsets: ['latin'],
@@ -30,7 +30,7 @@ export default function RootLayout({
                         <body className={`${primaryFont.variable} ${secondaryFont.variable} antialiased`}>
                                 <TRPCReactProvider>
                                         <Toaster />
-                                        {children}
+                                        <NuqsAdapter>{children}</NuqsAdapter>
                                 </TRPCReactProvider>
                         </body>
                 </html>
