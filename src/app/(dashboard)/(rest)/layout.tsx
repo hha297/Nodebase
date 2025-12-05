@@ -7,7 +7,7 @@ const RestLayout = ({ children }: { children: React.ReactNode }) => {
         return (
                 <>
                         <AppHeader />
-                        <main className="flex-1">{children}</main>
+                        <main className="bg-accent/30 flex-1">{children}</main>
                 </>
         );
 };
