@@ -1,9 +1,12 @@
 import { PAGINATION } from '@/config/constants';
+
+import { NodeType } from '@/generated/prisma/enums';
 import prisma from '@/lib/db';
 import { createTRPCRouter, premiumProcedure, protectedProcedure } from '@/trpc/init';
 import { TRPCError } from '@trpc/server';
 import { generateSlug } from 'random-word-slugs';
 import { z } from 'zod';
+import type { Node, Edge } from '@xyflow/react';
 
 export const workflowsRouter = createTRPCRouter({
         create: premiumProcedure.mutation(async ({ ctx }) => {
@@ -11,6 +14,16 @@ export const workflowsRouter = createTRPCRouter({
                         data: {
                                 name: generateSlug(3),
                                 userId: ctx.auth.user.id,
+                                nodes: {
+                                        create: {
+                                                type: NodeType.INITIAL,
+                                                position: {
+                                                        x: 0,
+                                                        y: 0,
+                                                },
+                                                name: NodeType.INITIAL,
+                                        },
+                                },
                         },
                 });
                 return workflow;
@@ -35,16 +48,40 @@ export const workflowsRouter = createTRPCRouter({
                         });
                 }),
         getOne: protectedProcedure.input(z.object({ id: z.string() })).query(async ({ ctx, input }) => {
-                const workflow = await prisma.workflow.findUnique({
+                const workflow = await prisma.workflow.findUniqueOrThrow({
                         where: {
                                 id: input.id,
                                 userId: ctx.auth.user.id,
                         },
+                        include: {
+                                nodes: true,
+                                connections: true,
+                        },
                 });
-                if (!workflow) {
-                        throw new TRPCError({ code: 'NOT_FOUND', message: 'Workflow not found' });
-                }
-                return workflow;
+
+                // Transform server nodes to react-flow compatible nodes
+                const nodes: Node[] = workflow.nodes.map((node) => ({
+                        id: node.id,
+                        type: node.type,
+                        data: (node.data as Record<string, unknown>) || {},
+                        position: node.position as { x: number; y: number },
+                }));
+
+                // Transform server connections to react-flow compatible edges
+                const edges: Edge[] = workflow.connections.map((connection) => ({
+                        id: connection.id,
+                        source: connection.fromNodeId,
+                        target: connection.toNodeId,
+                        sourceHandle: connection.fromOutput,
+                        targetHandle: connection.toInput,
+                }));
+
+                return {
+                        id: workflow.id,
+                        name: workflow.name,
+                        nodes,
+                        edges,
+                };
         }),
         getMany: protectedProcedure
                 .input(
