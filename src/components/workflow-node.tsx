@@ -28,7 +28,11 @@ export function WorkflowNode({
                                         <Button variant="ghost" size="sm" onClick={onSettings}>
                                                 <SettingsIcon className="size-4" />
                                         </Button>
-                                        <Button onClick={onDelete}>
+                                        <Button
+                                                variant="outline"
+                                                onClick={onDelete}
+                                                className="hover:bg-primary hover:text-white"
+                                        >
                                                 <TrashIcon className="size-4" />
                                         </Button>
                                 </NodeToolbar>
@@ -38,7 +42,9 @@ export function WorkflowNode({
                                 <NodeToolbar position={Position.Bottom} isVisible className="max-w-48 text-center">
                                         <p className="font-medium">{name}</p>
                                         {description && (
-                                                <p className="text-sm truncate text-muted-foreground">{description}</p>
+                                                <p className="text-sm truncate text-muted-foreground line-clamp-1">
+                                                        {description}
+                                                </p>
                                         )}
                                 </NodeToolbar>
                         )}

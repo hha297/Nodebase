@@ -10,7 +10,7 @@ export const AddNodeButton = memo(() => {
         const [selectorOpen, setSelectorOpen] = useState(false);
         return (
                 <NodeSelector open={selectorOpen} onOpenChange={setSelectorOpen}>
-                        <Button size="icon" onClick={() => {}}>
+                        <Button size="icon" onClick={() => setSelectorOpen(true)}>
                                 <PlusIcon className="size-4" />
                         </Button>
                 </NodeSelector>
