@@ -4,6 +4,7 @@ import './globals.css';
 import { TRPCReactProvider } from '@/trpc/client';
 import { Toaster } from '@/components/ui/sonner';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
+import { Provider as JotaiProvider } from 'jotai';
 const primaryFont = Space_Grotesk({
         variable: '--font-primary',
         subsets: ['latin'],
@@ -30,7 +31,9 @@ export default function RootLayout({
                         <body className={`${primaryFont.variable} ${secondaryFont.variable} antialiased`}>
                                 <TRPCReactProvider>
                                         <Toaster />
-                                        <NuqsAdapter>{children}</NuqsAdapter>
+                                        <NuqsAdapter>
+                                                <JotaiProvider>{children}</JotaiProvider>
+                                        </NuqsAdapter>
                                 </TRPCReactProvider>
                         </body>
                 </html>
