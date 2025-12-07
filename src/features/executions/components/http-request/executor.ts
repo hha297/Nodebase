@@ -3,9 +3,9 @@ import { NonRetriableError } from 'inngest';
 import ky, { type Options as KyOptions } from 'ky';
 
 type HttpRequestData = {
-        variableName?: string;
-        endpoint?: string;
-        method?: string;
+        variableName: string;
+        endpoint: string;
+        method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
         body?: string;
 };
 export const httpRequestExecutor: NodeExecutor<HttpRequestData> = async ({ data, nodeId, context, step }) => {
@@ -16,12 +16,17 @@ export const httpRequestExecutor: NodeExecutor<HttpRequestData> = async ({ data,
         }
         if (!data.variableName) {
                 // TODO: Publish 'error' for http request
-                throw new NonRetriableError('variable name not configured');
+                throw new NonRetriableError('HTTP Request Node: Variable name not configured');
+        }
+
+        if (!data.method) {
+                // TODO: Publish 'error' for http request
+                throw new NonRetriableError('HTTP Request Node: Method not configured');
         }
 
         const result = await step.run('http-request', async () => {
-                const method = data.method || 'GET';
-                const endpoint = data.endpoint!;
+                const method = data.method;
+                const endpoint = data.endpoint;
 
                 const options: KyOptions = { method };
 
@@ -46,17 +51,9 @@ export const httpRequestExecutor: NodeExecutor<HttpRequestData> = async ({ data,
                         },
                 };
 
-                if (data.variableName) {
-                        return {
-                                ...context,
-                                [data.variableName]: responsePayload,
-                        };
-                }
-
-                // Fallback to direct httpResponse for backwards compatibility
                 return {
                         ...context,
-                        ...responsePayload,
+                        [data.variableName]: responsePayload,
                 };
         });
 
