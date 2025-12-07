@@ -79,6 +79,7 @@
                 "sonner": "^2.0.7",
                 "superjson": "^2.2.2",
                 "tailwind-merge": "^3.4.0",
+                "toposort": "^2.0.2",
                 "vaul": "^1.1.2",
                 "zod": "^4.1.13"
         },
@@ -88,6 +89,7 @@
                 "@types/node": "^20",
                 "@types/react": "^19",
                 "@types/react-dom": "^19",
+                "@types/toposort": "^2.0.7",
                 "inngest-cli": "^1.14.0",
                 "mprocs": "^0.7.3",
                 "prisma": "^6.16.3",
