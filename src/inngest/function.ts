@@ -1,24 +1,33 @@
-import { createGoogleGenerativeAI } from '@ai-sdk/google';
+import { NonRetriableError } from 'inngest';
 import { inngest } from './client';
-import { generateText } from 'ai';
-import * as Sentry from '@sentry/nextjs';
+import prisma from '@/lib/db';
 
-const google = createGoogleGenerativeAI();
-
-export const executeAI = inngest.createFunction(
-        { id: 'execute-ai' },
-        { event: 'execute/ai' },
+export const executeWorkflow = inngest.createFunction(
+        { id: 'execute-workflow' },
+        { event: 'workflows/execute.workflow' },
         async ({ event, step }) => {
-                const { steps } = await step.ai.wrap('gemini-generate-text', generateText, {
-                        model: google('gemini-2.5-flash'),
-                        system: 'You are a helpful assistant that can answer questions and help with tasks.',
-                        prompt: 'What is the capital of France?',
-                        experimental_telemetry: {
-                                isEnabled: true,
-                                recordInputs: true,
-                                recordOutputs: true,
-                        },
+                const workflowId = event.data.workflowId;
+                if (!workflowId) {
+                        throw new NonRetriableError('Workflow ID is required');
+                }
+
+                const nodes = await step.run('prepare-workflow', async () => {
+                        const workflow = await prisma.workflow.findUnique({
+                                where: {
+                                        id: workflowId,
+                                },
+                                include: {
+                                        nodes: true,
+                                        connections: true,
+                                },
+                        });
+
+                        if (!workflow) {
+                                throw new NonRetriableError('Workflow not found');
+                        }
+                        return workflow.nodes;
                 });
-                return steps;
+
+                return { nodes };
         },
 );
