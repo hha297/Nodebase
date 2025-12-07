@@ -1,11 +1,16 @@
 import type { NodeExecutor } from '@/features/executions/type';
 import { NonRetriableError } from 'inngest';
 import ky, { type Options as KyOptions } from 'ky';
+import Handlebars from 'handlebars';
 
+Handlebars.registerHelper('json', (context) => {
+        const stringified = JSON.stringify(context, null, 2);
+        return new Handlebars.SafeString(stringified);
+});
 type HttpRequestData = {
-        variableName?: string;
-        endpoint?: string;
-        method?: string;
+        variableName: string;
+        endpoint: string;
+        method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
         body?: string;
 };
 export const httpRequestExecutor: NodeExecutor<HttpRequestData> = async ({ data, nodeId, context, step }) => {
@@ -16,17 +21,23 @@ export const httpRequestExecutor: NodeExecutor<HttpRequestData> = async ({ data,
         }
         if (!data.variableName) {
                 // TODO: Publish 'error' for http request
-                throw new NonRetriableError('variable name not configured');
+                throw new NonRetriableError('HTTP Request Node: Variable name not configured');
+        }
+
+        if (!data.method) {
+                // TODO: Publish 'error' for http request
+                throw new NonRetriableError('HTTP Request Node: Method not configured');
         }
 
         const result = await step.run('http-request', async () => {
-                const method = data.method || 'GET';
-                const endpoint = data.endpoint!;
-
+                const endpoint = Handlebars.compile(data.endpoint)(context);
+                const method = data.method;
                 const options: KyOptions = { method };
 
                 if (['POST', 'PUT', 'PATCH'].includes(method)) {
-                        options.body = data.body;
+                        const resolved = Handlebars.compile(data.body || '{}')(context);
+                        JSON.parse(resolved);
+                        options.body = resolved;
                         options.headers = {
                                 'Content-Type': 'application/json',
                         };
@@ -46,17 +57,11 @@ export const httpRequestExecutor: NodeExecutor<HttpRequestData> = async ({ data,
                         },
                 };
 
-                if (data.variableName) {
-                        return {
-                                ...context,
-                                [data.variableName]: responsePayload,
-                        };
-                }
+                const compileVariableName = Handlebars.compile(data.variableName)(context);
 
-                // Fallback to direct httpResponse for backwards compatibility
                 return {
                         ...context,
-                        ...responsePayload,
+                        [compileVariableName]: responsePayload,
                 };
         });
 
