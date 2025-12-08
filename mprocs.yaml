@@ -3,3 +3,5 @@ procs:
                 cmd: ['npm.cmd', 'run', 'inngest:dev']
         next:
                 cmd: ['npm.cmd', 'run', 'dev']
+        ngrok:
+                cmd: ['npm.cmd', 'run', 'ngrok:dev']
