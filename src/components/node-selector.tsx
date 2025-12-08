@@ -25,6 +25,18 @@ const triggerNodes: NodeTypeOption[] = [
                 description: 'Runs the flow by clicking a button. Good for getting started or testing quick flows.',
                 icon: MousePointerIcon,
         },
+        {
+                type: NodeType.GOOGLE_FORM_TRIGGER,
+                label: 'Google Form Trigger',
+                description: 'Runs the flow when a Google Form is submitted.',
+                icon: '/images/googleform.svg',
+        },
+        {
+                type: NodeType.STRIPE_TRIGGER,
+                label: 'Stripe',
+                description: 'Runs the flow when a Stripe event is captured.',
+                icon: '/images/stripe.svg',
+        },
 ];
 
 const executionNodes: NodeTypeOption[] = [
@@ -33,6 +45,24 @@ const executionNodes: NodeTypeOption[] = [
                 label: 'HTTP Request',
                 description: 'Trigger the workflow via HTTP request.',
                 icon: GlobeIcon,
+        },
+        {
+                type: NodeType.GEMINI,
+                label: 'Gemini',
+                description: 'Generate text using Gemini.',
+                icon: '/images/gemini.svg',
+        },
+        {
+                type: NodeType.OPENAI,
+                label: 'OpenAI',
+                description: 'Generate text using OpenAI.',
+                icon: '/images/openai.svg',
+        },
+        {
+                type: NodeType.ANTHROPIC,
+                label: 'Anthropic',
+                description: 'Generate text using Anthropic.',
+                icon: '/images/anthropic.svg',
         },
 ];
 
