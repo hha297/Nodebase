@@ -14,6 +14,7 @@
                 "dev:all": "dotenv -- mprocs"
         },
         "dependencies": {
+                "@ai-sdk/anthropic": "^2.0.23",
                 "@ai-sdk/google": "^2.0.17",
                 "@ai-sdk/openai": "^2.0.76",
                 "@hookform/resolvers": "^5.2.2",
