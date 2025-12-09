@@ -1,13 +1,10 @@
 import { PAGINATION } from '@/config/constants';
-
 import { NodeType } from '@/generated/prisma/enums';
 import prisma from '@/lib/db';
-import { createTRPCRouter, premiumProcedure, protectedProcedure } from '@/trpc/init';
-import { TRPCError } from '@trpc/server';
+import { createTRPCRouter, protectedProcedure } from '@/trpc/init';
 import { generateSlug } from 'random-word-slugs';
 import { z } from 'zod';
 import type { Node, Edge } from '@xyflow/react';
-import { inngest } from '@/inngest/client';
 import { sendWorkflowExecution } from '@/inngest/utils';
 
 export const workflowsRouter = createTRPCRouter({
