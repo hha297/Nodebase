@@ -17,6 +17,9 @@ import z from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect } from 'react';
+import { useGetCredentialsByType } from '@/features/credentials/hooks/use-credentials';
+import { CredentialType } from '@/generated/prisma/enums';
+import Image from 'next/image';
 
 // Available models:
 
@@ -27,6 +30,7 @@ const formSchema = z.object({
                 .regex(/^[a-zA-Z_][a-zA-Z0-9_]*$/, {
                         message: 'Variable name must start with a letter and contain only letters, numbers, and underscores',
                 }),
+        credentialId: z.string().min(1, { message: 'Credential is required' }),
         systemPrompt: z.string().optional(),
         userPrompt: z.string().min(1, { message: 'User prompt is required' }),
 });
@@ -40,11 +44,14 @@ interface AnthropicDialogProps {
 }
 
 export const AnthropicDialog = ({ open, onOpenChange, onSubmit, defaultValues = {} }: AnthropicDialogProps) => {
+        const { data: credentials, isLoading: isLoadingCredentials } = useGetCredentialsByType(
+                CredentialType.ANTHROPIC,
+        );
         const form = useForm<z.infer<typeof formSchema>>({
                 resolver: zodResolver(formSchema),
                 defaultValues: {
                         variableName: defaultValues.variableName || '',
-
+                        credentialId: defaultValues.credentialId || '',
                         systemPrompt: defaultValues.systemPrompt || '',
                         userPrompt: defaultValues.userPrompt || '',
                 },
@@ -55,7 +62,7 @@ export const AnthropicDialog = ({ open, onOpenChange, onSubmit, defaultValues = 
                 if (open) {
                         form.reset({
                                 variableName: defaultValues.variableName || '',
-
+                                credentialId: defaultValues.credentialId || '',
                                 systemPrompt: defaultValues.systemPrompt || '',
                                 userPrompt: defaultValues.userPrompt || '',
                         });
@@ -97,6 +104,66 @@ export const AnthropicDialog = ({ open, onOpenChange, onSubmit, defaultValues = 
                                                                                 other nodes:{' '}
                                                                                 {`{{${watchVariableName}.text}}`}
                                                                         </FormDescription>
+                                                                        <FormMessage />
+                                                                </FormItem>
+                                                        )}
+                                                />
+                                                <FormField
+                                                        control={form.control}
+                                                        name="credentialId"
+                                                        render={({ field }) => (
+                                                                <FormItem>
+                                                                        <FormLabel>Anthropic Credential</FormLabel>
+                                                                        <Select
+                                                                                onValueChange={field.onChange}
+                                                                                defaultValue={field.value}
+                                                                                disabled={
+                                                                                        isLoadingCredentials ||
+                                                                                        !credentials
+                                                                                }
+                                                                        >
+                                                                                <FormControl>
+                                                                                        <SelectTrigger className="w-full">
+                                                                                                <SelectValue placeholder="Select a credential" />
+                                                                                        </SelectTrigger>
+                                                                                </FormControl>
+                                                                                <SelectContent>
+                                                                                        {credentials?.map(
+                                                                                                (credential) => (
+                                                                                                        <SelectItem
+                                                                                                                key={
+                                                                                                                        credential.id
+                                                                                                                }
+                                                                                                                value={
+                                                                                                                        credential.id
+                                                                                                                }
+                                                                                                        >
+                                                                                                                <div className="flex items-center gap-2">
+                                                                                                                        <Image
+                                                                                                                                src={
+                                                                                                                                        '/images/anthropic.svg'
+                                                                                                                                }
+                                                                                                                                alt={
+                                                                                                                                        'Anthropic'
+                                                                                                                                }
+                                                                                                                                width={
+                                                                                                                                        16
+                                                                                                                                }
+                                                                                                                                height={
+                                                                                                                                        16
+                                                                                                                                }
+                                                                                                                        />
+                                                                                                                        <span>
+                                                                                                                                {
+                                                                                                                                        credential.name
+                                                                                                                                }
+                                                                                                                        </span>
+                                                                                                                </div>
+                                                                                                        </SelectItem>
+                                                                                                ),
+                                                                                        )}
+                                                                                </SelectContent>
+                                                                        </Select>
                                                                         <FormMessage />
                                                                 </FormItem>
                                                         )}
