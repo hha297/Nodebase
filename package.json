@@ -5,8 +5,9 @@
         "type": "module",
         "scripts": {
                 "dev": "next dev --turbopack",
-                "build": "next build --turbopack",
+                "build": "prisma generate && next build --turbopack",
                 "start": "next start",
+                "postinstall": "prisma generate",
                 "lint": "biome check",
                 "format": "biome format --write",
                 "ngrok:dev": "dotenv -- cmd /c \"ngrok http --domain=%NGROK_URL% 3000\"",
