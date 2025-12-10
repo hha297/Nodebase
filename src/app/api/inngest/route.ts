@@ -6,4 +6,5 @@ import { executeWorkflow } from '@/inngest/function';
 export const { GET, POST, PUT } = serve({
         client: inngest,
         functions: [executeWorkflow],
+        signingKey: process.env.INNGEST_SIGNING_KEY,
 });
