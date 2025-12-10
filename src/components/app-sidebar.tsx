@@ -109,16 +109,7 @@ export const AppSidebar = () => {
                                                         </SidebarMenuButton>
                                                 </SidebarMenuItem>
                                         )}
-                                        <SidebarMenuItem>
-                                                <SidebarMenuButton
-                                                        tooltip="Billing"
-                                                        onClick={() => {}}
-                                                        className="gap-x-4 h-10"
-                                                >
-                                                        <CreditCardIcon className="size-4" />
-                                                        <span>Billing</span>
-                                                </SidebarMenuButton>
-                                        </SidebarMenuItem>
+
                                         <SidebarMenuItem>
                                                 <SidebarMenuButton
                                                         tooltip="Sign Out"
