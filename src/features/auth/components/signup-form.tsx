@@ -39,6 +39,40 @@ export const SignUpForm = () => {
                         confirmPassword: '',
                 },
         });
+        const signInWithGithub = async () => {
+                await authClient.signIn.social(
+                        {
+                                provider: 'github',
+                                callbackURL: '/',
+                        },
+                        {
+                                onSuccess: () => {
+                                        router.push('/');
+                                },
+                                onError: (ctx) => {
+                                        toast.error('Failed to sign in with Github');
+                                        console.error(ctx.error);
+                                },
+                        },
+                );
+        };
+        const signInWithGoogle = async () => {
+                await authClient.signIn.social(
+                        {
+                                provider: 'google',
+                                callbackURL: '/',
+                        },
+                        {
+                                onSuccess: () => {
+                                        router.push('/');
+                                },
+                                onError: (ctx) => {
+                                        toast.error('Failed to sign in with Google');
+                                        console.error(ctx.error);
+                                },
+                        },
+                );
+        };
         const onSubmit = async (values: SignUpFormValues) => {
                 await authClient.signUp.email(
                         {
@@ -79,6 +113,7 @@ export const SignUpForm = () => {
                                                                                 className="w-full"
                                                                                 type="button"
                                                                                 disabled={isPending}
+                                                                                onClick={signInWithGithub}
                                                                         >
                                                                                 <Image
                                                                                         src="/images/github.svg"
@@ -93,6 +128,7 @@ export const SignUpForm = () => {
                                                                                 className="w-full"
                                                                                 type="button"
                                                                                 disabled={isPending}
+                                                                                onClick={signInWithGoogle}
                                                                         >
                                                                                 <Image
                                                                                         src="/images/google.svg"
