@@ -13,9 +13,7 @@ import {
 } from '@/components/entity-components';
 import { formatDistanceToNow } from 'date-fns';
 import { useExecutionsParams } from '../hooks/use-executions-params';
-import type { Execution } from '@/generated/prisma/client';
-import { ExecutionStatus } from '@/generated/prisma/enums';
-import { CredentialType } from '@/generated/prisma/enums';
+import { Execution, ExecutionStatus, CredentialType } from '@prisma/client';
 import { useSuspenseExecutions } from '../hooks/use-executions';
 import { CircleCheckIcon, CircleDashedIcon, CircleXIcon, Loader2Icon } from 'lucide-react';
 

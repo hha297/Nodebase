@@ -2,7 +2,6 @@ import type { NodeExecutor } from '@/features/executions/type';
 import { NonRetriableError } from 'inngest';
 import { decode } from 'html-entities';
 import Handlebars from 'handlebars';
-import { discordChannel } from '@/inngest/channels/discord';
 import ky from 'ky';
 import { slackChannel } from '@/inngest/channels/slack';
 

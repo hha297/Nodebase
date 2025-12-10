@@ -8,7 +8,7 @@ import { useCallback } from 'react';
 import { toast } from 'sonner';
 
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-import { NodeType } from '@/generated/prisma/enums';
+import { NodeType } from '@prisma/client';
 import { Separator } from './ui/separator';
 
 export type NodeTypeOption = {

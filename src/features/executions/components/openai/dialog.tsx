@@ -18,7 +18,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect } from 'react';
 import { useGetCredentialsByType } from '@/features/credentials/hooks/use-credentials';
-import { CredentialType } from '@/generated/prisma/enums';
+import { CredentialType } from '@prisma/client';
 import Image from 'next/image';
 
 // Available models:

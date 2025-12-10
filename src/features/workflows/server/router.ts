@@ -1,5 +1,5 @@
 import { PAGINATION } from '@/config/constants';
-import { NodeType } from '@/generated/prisma/enums';
+import { NodeType } from '@prisma/client';
 import prisma from '@/lib/db';
 import { createTRPCRouter, protectedProcedure } from '@/trpc/init';
 import { generateSlug } from 'random-word-slugs';

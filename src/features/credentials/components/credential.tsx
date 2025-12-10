@@ -1,6 +1,6 @@
 'use client';
 
-import { CredentialType } from '@/generated/prisma/enums';
+import { CredentialType } from '@prisma/client';
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';

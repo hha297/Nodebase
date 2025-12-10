@@ -1,4 +1,4 @@
-import { Connection, Node } from '@/generated/prisma/client';
+import { Connection, Node } from '@prisma/client';
 import toposort from 'toposort';
 import { inngest } from './client';
 import { createId } from '@paralleldrive/cuid2';

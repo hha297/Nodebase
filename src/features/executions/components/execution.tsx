@@ -2,7 +2,7 @@
 
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible';
-import { ExecutionStatus } from '@/generated/prisma/enums';
+import { ExecutionStatus } from '@prisma/client';
 import { CircleCheckIcon, CircleXIcon, Loader2Icon, CircleDashedIcon } from 'lucide-react';
 import { useSuspenseExecution } from '../hooks/use-executions';
 import { useState } from 'react';
